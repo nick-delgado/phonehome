@@ -1,19 +1,27 @@
 #/bin/bash
 
 ##################
-# CONNECTION TOOLS
+# PhoneHome 0.1
+#
+# By Ivan (Nick) Delgado
 ##################
-. ph.conf
+
+if [ ! -f ph.conf ]; then
+	echo "Configuration file 'ph.conf' not found"
+	exit 1
+else
+	. ph.conf
+fi
 
 open_home_port() {
-	for PORT in OPEN_PORTS
+	for PORT in ${OPEN_PORTS[@]}
 	do
 		echo >/dev/tcp/${HOST}/${PORT} &> /dev/null && echo 'knocked $PORT'
 	done
 }
 
 function close_home_port() {
-	for PORT in CLOSE_PORTS
+	for PORT in ${CLOSE_PORTS[@]}
 	do
 		echo >/dev/tcp/${HOST}/${PORT} &> /dev/null && echo 'knocked $PORT'
 	done
@@ -22,7 +30,7 @@ function close_home_port() {
 echo "Opening port"
 open_home_port
 echo "Start SSH"
-ssh -p${HIDDEN_PORT} ${USER}@{HOST}
+ssh -p${HIDDEN_PORT} ${USER}@${HOST}
 if [ $? -eq 0 ] 
 then
 	
